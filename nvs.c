@@ -13,13 +13,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <net/if.h>
 #include <netinet/in.h>
 #include <time.h>
 
 #include <netlink/netlink.h>
 #include <netlink/msg.h>
 #include <netlink/attr.h>
-#include <linux/wireless.h>
 #include "nl80211.h"
 
 #include "calibrator.h"

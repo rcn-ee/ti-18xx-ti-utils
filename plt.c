@@ -13,13 +13,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <net/if.h>
 
 #include <netlink/genl/genl.h>
 #include <netlink/genl/family.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/msg.h>
 #include <netlink/attr.h>
-#include <linux/wireless.h>
 #include <linux/ethtool.h>
 #include "nl80211.h"
 
