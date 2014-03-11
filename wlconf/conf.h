@@ -1353,6 +1353,21 @@ struct conf_hangover_settings {
 	u8 window_size;
 } __packed;
 
+struct conf_ap_sleep_settings {
+	/* Duty Cycle (20-80% of staying Awake) for IDLE AP
+	 * (0: disable) */
+	u8 idle_duty_cycle;
+	/* Duty Cycle (20-80% of staying Awake) for Connected AP
+	 * (0: disable) */
+	u8 connected_duty_cycle;
+	/* Maximum stations that are allowed to be connected to AP
+	 *  (255: no limit) */
+	u8 max_stations_thresh;
+	/* Timeout till enabling the Sleep Mechanism after data stops
+	 * [unit: 100 msec] */
+	u8 idle_conn_thresh;
+} __packed;
+
 struct conf_recovery_settings {
 	/* BUG() on fw recovery */
 	u8 bug_on_recovery;
@@ -1398,7 +1413,7 @@ struct wlcore_conf {
 };
 
 #define WL18XX_CONF_MAGIC	0x10e100ca
-#define WL18XX_CONF_VERSION	0x00060006
+#define WL18XX_CONF_VERSION	0x00060007
 #define WL18XX_CONF_MASK	0x0000ffff
 #define WL18XX_CONF_SIZE	(WLCORE_CONF_SIZE + \
 				 sizeof(struct wl18xx_priv_conf))
@@ -1491,6 +1506,8 @@ struct wl18xx_priv_conf {
 
 	/* this structure is copied wholesale to FW */
 	struct wl18xx_mac_and_phy_params phy;
+
+	struct conf_ap_sleep_settings ap_sleep;
 } __packed;
 
 struct wlcore_conf_file {
