@@ -115,6 +115,7 @@ struct wl18xx_cmd_rx_stats {
 	__le32 errors;
 	__le32 addr_mm;
 	__le32 good;
+        __le32 rssi;
 } __attribute__((packed));
 
 struct wl18xx_cmd_start_tx {

@@ -555,6 +555,7 @@ static int plt_wl18xx_display_rx_stats(struct nl_msg *msg, void *arg)
 	printf("FCS Errors:\t\t%d\n", prms->errors);
 	printf("MAC Mismatch:\t\t%d\n", prms->addr_mm);
 	printf("Good Packets:\t\t%d\n", prms->good);
+        printf("Average RSSI:\t\t%d\n", prms->rssi);
 	if(prms->total) {
 		float per = ((float)prms->total - (float)prms->good)/(float)prms->total;
 		printf("PER:\t\t\t%f     # PER = Total Bad / Total Received\n", per);
