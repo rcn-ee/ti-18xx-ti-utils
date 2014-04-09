@@ -1013,6 +1013,12 @@ struct conf_conn_settings {
 	 * whether we can go to ELP.
 	 */
 	u8 sta_sleep_auth;
+
+	/*
+	 * Default RX BA Activity filter configuration
+	 */
+	u8 suspend_rx_ba_activity;
+
 } __packed;
 
 enum {
@@ -1392,7 +1398,7 @@ struct wlcore_conf {
 };
 
 #define WL18XX_CONF_MAGIC	0x10e100ca
-#define WL18XX_CONF_VERSION	0x00050006
+#define WL18XX_CONF_VERSION	0x00060006
 #define WL18XX_CONF_MASK	0x0000ffff
 #define WL18XX_CONF_SIZE	(WLCORE_CONF_SIZE + \
 				 sizeof(struct wl18xx_priv_conf))
