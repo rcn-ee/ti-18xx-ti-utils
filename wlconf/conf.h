@@ -1376,16 +1376,6 @@ struct conf_recovery_settings {
 	u8 no_recovery;
 } __packed;
 
-/*
- * The conf version consists of 4 bytes.  The two MSB are the wlcore
- * version, the two LSB are the lower driver's private conf
- * version.
- */
-#define WLCORE_CONF_VERSION	(0x0006 << 16)
-#define WLCORE_CONF_MASK	0xffff0000
-#define WLCORE_CONF_SIZE	(sizeof(struct wlcore_conf_header) +	\
-				 sizeof(struct wlcore_conf))
-
 struct wlcore_conf_header {
 	__le32 magic;
 	__le32 version;
