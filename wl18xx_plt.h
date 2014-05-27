@@ -86,7 +86,8 @@ struct wl18xx_cmd_channel_tune {
 	__u8	channel;
 	__u8	band;
 	__u8	bandwidth;
-	__u8	padding[3];
+	__u8    rfSetIdx;
+	__u8	padding[2];
 } __attribute__((packed));
 
 struct wl18xx_cmd_start_rx {

@@ -431,6 +431,7 @@ static int plt_wl18xx_tune_channel(struct nl80211_state *state, struct nl_cb *cb
 	prms.channel	= (__u8)atoi(argv[0]);
 	prms.band	= (__u8)atoi(argv[1]);
 	prms.bandwidth	= (__u8)atoi(argv[2]);
+    prms.rfSetIdx   =  0; /* Set to Zero to support backward competability only for RTTT */
 
 	key = nla_nest_start(msg, NL80211_ATTR_TESTDATA);
 	if (!key) {
