@@ -76,6 +76,10 @@ enum wl18xx_test_cmds {
 	/*  0x33   */   WL18XX_TEST_CMD_PHY_ADDR_WRITE,
 	/*  0x34   */   WL18XX_TEST_CMD_START_TX_TONE,
 	/*  0x35   */   WL18XX_TEST_CMD_STOP_TX_TONE,
+	/*  0x36   */   WL18XX_TEST_CMD_START_RF_PARAMS_SET,
+	/*  0x37   */   WL18XX_TEST_CMD_STOP_RF_PARAMS_SET,
+	/*  0x38   */   WL18XX_TEST_CMD_REG_DOMAIN_UPDATE,
+	/*  0x39   */   WL18XX_TEST_CMD_5GHZ_ANTENNA_DIVERSITY,
 };
 
 struct wl18xx_cmd_channel_tune {
@@ -116,7 +120,8 @@ struct wl18xx_cmd_rx_stats {
 	__le32 errors;
 	__le32 addr_mm;
 	__le32 good;
-        __le32 rssi;
+	__le32 rssi_soc;
+	__le32 rssi_ant;
 } __attribute__((packed));
 
 struct wl18xx_cmd_start_tx {
@@ -150,11 +155,11 @@ struct wl18xx_cmd_set_tx_power {
 
 	__le32 radio_status;
 
-	__le32 mac_des_pwr;
+	__s32 mac_des_pwr;
 	__le32 mac_lvl_idx;
 	__le32 freq_band;
 	__le32 freq_prim_chan_num;
-	__le32 freq_2nd_chan_idx;
+	__le32 freq_prim_chan_loc;
 	__le32 mac_ant_select;
 	__le32 mac_non_srv;
 	__le32 mac_chan_lim_dis;
@@ -213,24 +218,35 @@ struct wl18xx_cmd_phy_reg_write { /* TEST_CMD_PHY_REG_WRITE */
 } __attribute__((packed));
 
 struct wl18xx_cmd_phy_tx_tone_start { /* TEST_CMD_START_TX_TONE */
-    struct wl1271_cmd_header header;
-    struct wl1271_cmd_test_header test;
+	struct wl1271_cmd_header header;
+    	struct wl1271_cmd_test_header test;
 
-    __le32 radio_status;
+    	__le32 radio_status;
 
-    __u8   mode;
-    __s8   bin_index;
-    __u8   trigger_iqram_recording;
-    __u8   sig_gen_cw_en;
-    __u8   sig_gen_mod_en;
-    __u8   ant_mode;
-    __u8   set_rx_aux_on;
-    __u8   gain_index;
+    	__u8   mode;
+   	 __s8   bin_index;
+    	__u8   trigger_iqram_recording;
+   	 __u8   sig_gen_cw_en;
+    	__u8   sig_gen_mod_en;
+    	__u8   ant_mode;
+	__u8   set_rx_aux_on;
+    	__u8   gain_index;
 } __attribute__((packed));
 
 struct wl18xx_cmd_phy_tx_tone_stop { /* TEST_CMD_STOP_TX_TONE */
-    struct wl1271_cmd_header header;
-    struct wl1271_cmd_test_header test;
+    	struct wl1271_cmd_header header;
+    	struct wl1271_cmd_test_header test;
+} __attribute__((packed));
+
+struct wl18xx_cmd_set_antenna_diversity_5G { /* WL18XX_TEST_CMD_5GHZ_ANTENNA_DIVERSITY */
+	struct wl1271_cmd_header header;
+    	struct wl1271_cmd_test_header test;
+
+	__le32 radio_status;
+
+    	__u8   mode;
+    	__u8   padding[3];
+
 } __attribute__((packed));
 
 #endif /* __WL18XX_PLT_H__ */
