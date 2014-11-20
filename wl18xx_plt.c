@@ -463,7 +463,7 @@ nla_put_failure:
 
 COMMAND(wl18xx_plt, set_tx_power, "<output_power> <level> <band> "
 		"<channel_number> <primary_channel_location> <antenna> <non_serving_channel> "
-		"<channel_limitation> <frontend_limit> <gain_calculation_mode> "
+		"<channel_limitation> <internal> <gain_calculation_mode> "
 		"<analog_gain_control_id> <post_dpd_gain>",
 	NL80211_CMD_TESTMODE, 0, CIB_NETDEV, plt_wl18xx_set_tx_power,
 	"set TX transmissions power for PLT.\n");
