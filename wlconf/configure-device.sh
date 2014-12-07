@@ -111,7 +111,7 @@ if [ -e $binary_name ]; then
         esac
 fi
 
-ini_file_name="official_inis/WL8_System_parameters.ini"
+ini_file_name="official_inis/WL1835MOD_INI.ini"
 INPUT_NAME=0
 
 if [ $modify_conf_file -eq 0 ]; then 
