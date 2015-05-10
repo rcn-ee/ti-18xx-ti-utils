@@ -1203,6 +1203,15 @@ struct conf_sched_scan_settings {
 
 	/* SNR threshold to be used for filtering */
 	s8 snr_threshold;
+
+	/*
+	* number of short intervals scheduled scan cycles before
+	* switching to long intervals
+	*/
+	u8 num_short_intervals;
+
+	/* interval between each long scheduled scan cycle (in ms) */
+	u16 long_interval;
 } __packed;
 
 struct conf_ht_setting {
@@ -1403,7 +1412,7 @@ struct wlcore_conf {
 };
 
 #define WL18XX_CONF_MAGIC	0x10e100ca
-#define WL18XX_CONF_VERSION	0x00060007
+#define WL18XX_CONF_VERSION	0x00070007
 #define WL18XX_CONF_MASK	0x0000ffff
 #define WL18XX_CONF_SIZE	(WLCORE_CONF_SIZE + \
 				 sizeof(struct wl18xx_priv_conf))
