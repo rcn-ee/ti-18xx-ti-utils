@@ -2,7 +2,7 @@
 # Script to run on the target to configure the wl18xx-conf.bin file to match the device capabilities
 
 # version
-VERSION=1.0
+VERSION=1.1
 
 # defaults
 binary_name="/lib/firmware/ti-connectivity/wl18xx-conf.bin"
@@ -34,11 +34,11 @@ print_summary()
 	echo "The device has been successfully configured."
 	echo "TI Module: "$ti_mod
 	echo "Chip Flavor: "$CHIP_FLAVOR
-	echo "Number of 2.4GHz antennas fitted: "$number_2_4G_antenna
-	echo "Number of 5GHz antennas fitted: "$number_5G_antenna
+	echo "Number of 2.4GHz Antennas Fitted: "$number_2_4G_antenna
+	echo "Number of 5GHz Antennas Fitted: "$number_5G_antenna
 	echo "Diversity Support: "$diversity_5g
 	echo "SISO40 Support: "$siso40mhz
-	echo "Japanese standards applied: "$japan
+	echo "Japanese Standards Applied: "$japan
 	echo ""
 }
 
@@ -142,8 +142,8 @@ do
 	if [ $number_2_4G_antenna -gt 1 ]; then
 		read -p 'How many 2.4GHz antennas are fitted? [1/2] : ' NUM_OF_ANTENNAS
 		case $NUM_OF_ANTENNAS in
-			"1") number_2_4G_antenna=1;;
-			"2") number_2_4G_antenna=2;;
+			"1") number_2_4G_antenna=1;ht_mode=2;;
+			"2") number_2_4G_antenna=2;ht_mode=0;;
 			*) echo "Please enter 1 or 2 antennas";NUM_OF_ANTENNAS=-1;continue;;
         esac
 	else
@@ -158,11 +158,12 @@ NUM_OF_ANTENNAS=-1;
 while [ $NUM_OF_ANTENNAS -eq -1 ]
 do
 	if [ $number_5G_antenna -eq 1 ]; then
-		read -p 'How many 5GHz antennas are fitted? [0/1] : ' NUM_OF_ANTENNAS
+		read -p 'How many 5GHz antennas are fitted? [0/1/2] : ' NUM_OF_ANTENNAS
 		case $NUM_OF_ANTENNAS in
 			"0") number_5G_antenna=0;;
 			"1") number_5G_antenna=1;;
-			*) echo "Please enter 0 or 1";NUM_OF_ANTENNAS=-1;continue;;
+			"2") number_5G_antenna=2;;
+			*) echo "Please enter 0, 1 or 2";NUM_OF_ANTENNAS=-1;continue;;
         esac
 	else
 		# set to required number to exit loop
@@ -172,12 +173,19 @@ done
 
 
 # ask if 5GHz diversity is needed
-DIVERSITY=-1;
-diversity_5g="n";
-high_band_component_type=0x09;
+if [ $TI_MODULE -eq 1 ] && [ $CHIP_FLAVOR -eq 1837 ]; then
+	diversity_5g="y";
+	high_band_component_type=0x0a;
+	DIVERSITY=0;
+else
+	diversity_5g="n";
+	high_band_component_type=0x09;
+	DIVERSITY=-1;
+fi
+
 while [ $DIVERSITY -eq -1 ]
 do
-	if [ $TI_MODULE -eq 0 ] && [ $number_5G_antenna -eq 1 ]; then
+	if [ $TI_MODULE -eq 0 ] && [ $number_5G_antenna -ge 1 ]; then
 		read -p 'Should 5GHz diversity be applied? [y/n] : ' diversity_5g
 		case $diversity_5g in
 			"n") high_band_component_type=0x09;DIVERSITY=0;;
@@ -195,16 +203,22 @@ done
 
 # ask if SISO40 should be enabled
 SISO40=-1;
+siso40mhz="y";
 while [ $SISO40 -eq -1 ]
 do
-	read -p 'Should SISO40 support be applied? [y/n] : ' siso40mhz
-	case $siso40mhz in
-		"n") ht40=0;SISO40=0;;
-		"N") ht40=0;SISO40=0;;
-		"y") ht40=1;SISO40=0;;  			 
-		"Y") ht40=1;SISO40=0;;
-		*) echo "Please enter y or n";SISO40=-1;continue;;
-    esac
+	if [ $number_2_4G_antenna -eq 1 ]; then
+		read -p 'Should SISO40 support be applied? [y/n] : ' siso40mhz
+		case $siso40mhz in
+			"n") ht_mode=2;SISO40=0;;
+			"N") ht_mode=2;SISO40=0;;
+			"y") ht_mode=1;SISO40=0;;  			 
+			"Y") ht_mode=1;SISO40=0;;
+			*) echo "Please enter y or n";SISO40=-1;continue;;
+		esac
+	else
+		# set to required number to exit loop
+		SISO40=0;
+	fi
 done
 
 # remove the wlcore_sdio module before updating the bin file
@@ -219,7 +233,7 @@ rmmod wlcore_sdio
 ./wlconf -i $binary_name -o $binary_name -s wl18xx.phy.number_of_assembled_ant2_4=$number_2_4G_antenna
 ./wlconf -i $binary_name -o $binary_name -s wl18xx.phy.number_of_assembled_ant5=$number_5G_antenna
 ./wlconf -i $binary_name -o $binary_name -s wl18xx.phy.high_band_component_type=$high_band_component_type
-./wlconf -i $binary_name -o $binary_name -s wl18xx.ht.mode=$ht40
+./wlconf -i $binary_name -o $binary_name -s wl18xx.ht.mode=$ht_mode
 
 print_summary
 
