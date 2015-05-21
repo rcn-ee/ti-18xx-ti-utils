@@ -6,7 +6,8 @@ VERSION=1.1
 
 # defaults
 binary_name="/lib/firmware/ti-connectivity/wl18xx-conf.bin"
-
+wlconf_path="/usr/sbin/wlconf/"
+ini_path="/usr/sbin/wlconf/official_inis"
 
 # function for printing help
 print_help()
@@ -98,16 +99,16 @@ done
 JP_STANDARD=-1;
 japan="n";
 if [ $TI_MODULE -eq 0 ]; then
-	ini_file_name="official_inis/WL8_COB_INI.ini"
+	ini_file_name="WL8_COB_INI.ini"
 else
 	case $CHIP_FLAVOR in
-			1801) ini_file_name="official_inis/WL1835MOD_INI.ini"; jp_support=0;;
-			1805) ini_file_name="official_inis/WL1835MOD_INI.ini"; jp_support=0;;
-			1807) ini_file_name="official_inis/WL1837MOD_INI_FCC_CE.ini"; jp_support=1;;
-			1831) ini_file_name="official_inis/WL1835MOD_INI.ini"; jp_support=0;;
-			1835) ini_file_name="official_inis/WL1835MOD_INI.ini"; jp_support=0;;
-			1837) ini_file_name="official_inis/WL1837MOD_INI_FCC_CE.ini"; jp_support=1;;
-			0) ini_file_name="official_inis/WL1835MOD_INI.ini"; jp_support=0;;
+			1801) ini_file_name="WL1835MOD_INI.ini"; jp_support=0;;
+			1805) ini_file_name="WL1835MOD_INI.ini"; jp_support=0;;
+			1807) ini_file_name="WL1837MOD_INI_FCC_CE.ini"; jp_support=1;;
+			1831) ini_file_name="WL1835MOD_INI.ini"; jp_support=0;;
+			1835) ini_file_name="WL1835MOD_INI.ini"; jp_support=0;;
+			1837) ini_file_name="WL1837MOD_INI_FCC_CE.ini"; jp_support=1;;
+			0) ini_file_name="WL1835MOD_INI.ini"; jp_support=0;;
     esac
 	
 	while [ $JP_STANDARD -eq -1 ]
@@ -115,10 +116,10 @@ else
 		if [ $jp_support -eq 1 ]; then
 			read -p 'Should Japanese standards be applied? [y/n] : ' japan
 			case $japan in
-				"n") ini_file_name="official_inis/WL1837MOD_INI_FCC_CE.ini";JP_STANDARD=0;;
-				"N") ini_file_name="official_inis/WL1837MOD_INI_FCC_CE.ini";JP_STANDARD=0;;
-				"y") ini_file_name="official_inis/WL1837MOD_INI_FCC_CE_JP.ini";JP_STANDARD=0;;  			 
-				"Y") ini_file_name="official_inis/WL1837MOD_INI_FCC_CE_JP.ini";JP_STANDARD=0;;
+				"n") ini_file_name="WL1837MOD_INI_FCC_CE.ini";JP_STANDARD=0;;
+				"N") ini_file_name="WL1837MOD_INI_FCC_CE.ini";JP_STANDARD=0;;
+				"y") ini_file_name="WL1837MOD_INI_FCC_CE_JP.ini";JP_STANDARD=0;;  			 
+				"Y") ini_file_name="WL1837MOD_INI_FCC_CE_JP.ini";JP_STANDARD=0;;
 				*) echo "Please enter y or n";JP_STANDARD=-1;continue;;
 			esac
 		else
@@ -127,6 +128,9 @@ else
 		fi
 	done
 fi
+
+# add the ini file path to the ini file name
+ini_file_name=$ini_path"/"$ini_file_name
 
 # check if the correct ini file exist
 if [ ! -e $ini_file_name ]; then                                                                                                                     
@@ -226,6 +230,7 @@ rmmod wlcore_sdio
 
 
 # create clean file
+cd $wlconf_path
 ./wlconf -o $binary_name -I $ini_file_name
   
   
