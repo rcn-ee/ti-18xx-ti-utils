@@ -200,7 +200,8 @@ done
 
 
 # ask if 5GHz diversity is needed
-if [ $TI_MODULE -eq 1 ] && [ $CHIP_FLAVOR -eq 1837 ]; then
+if [[ $TI_MODULE -eq 1 ]] &&
+   [[ $CHIP_FLAVOR -eq 1807 || $CHIP_FLAVOR -eq 1837 ]]; then
 	diversity_5g="y";
 	high_band_component_type=0x0a;
 	DIVERSITY=0;
